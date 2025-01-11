@@ -122,7 +122,7 @@ STATIC_URL = 'static/'
 
 # This is where React will build the static files
 STATICFILES_DIRS = [
-    BASE_DIR / 'deltahacks_project/index.html',
+    BASE_DIR / 'deltahacks_project/src',
 ]
 
 
