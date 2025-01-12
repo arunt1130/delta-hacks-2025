@@ -64,6 +64,16 @@ function App() {
         const { lat, lng } = data.results[0].geometry;
         setUserLocation([lat, lng]);
         alert(`Location for ${city}: Latitude ${lat}, Longitude ${lng}`);
+
+        const locationData = {
+          longitude: lat,
+          latitude: lng
+        }
+        
+        sendDataToBackend(locationData);
+
+
+
       })
       .catch(error => console.error('Error fetching geocoding data:', error));
   };
