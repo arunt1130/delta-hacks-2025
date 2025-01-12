@@ -22,7 +22,10 @@ function App() {
       .then(response => response.json())
       .then(data => {
         console.log(data); // Log the data to verify the structure
-        setFires(data.events);
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        const recentFires = data.events.filter(event => new Date(event.geometries[0].date) >= oneWeekAgo);
+        setFires(recentFires);
       })
       .catch(error => console.error('Error fetching data:', error));
   }, []);
@@ -48,15 +51,13 @@ function App() {
 
   const handleCitySubmit = (e) => {
     e.preventDefault();
-    const geocodingApiKey = '45006f4114e645bc80b14ac0f6530c1d'; 
+    const geocodingApiKey = '45006f4114e645bc80b14ac0f6530c1d'; // Replace with your actual OpenCage API key
     const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${geocodingApiKey}`;
 
     axios.get(geocodingUrl)
       .then(response => {
         const { lat, lng } = response.data.results[0].geometry;
         setUserLocation([lat, lng]);
-        alert(`lat${lat}`);
-        alert(`long${lng}`);
         alert(`Location for ${city}: Latitude ${lat}, Longitude ${lng}`);
       })
       .catch(error => console.error('Error fetching geocoding data:', error));
@@ -72,7 +73,7 @@ function App() {
   };
 
   const filteredFires = fires.filter(fire =>
-    fire.geometry.some(geo =>
+    fire.geometries.some(geo =>
       mapBounds && mapBounds.contains([geo.coordinates[1], geo.coordinates[0]])
     )
   );
@@ -87,10 +88,6 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <div>
-        <h1>Address to Coordinates Converter</h1>
-        <LocationForm />
-      </div>
       <h1>Search</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -103,6 +100,15 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <form onSubmit={handleCitySubmit}>
+        <input
+          type="text"
+          value={city}
+          onChange={handleCityChange}
+          placeholder="Enter city name"
+        />
+        <button type="submit">Search</button>
+      </form>
       <MapContainer center={userLocation} zoom={2} style={{ height: '500px', width: '100%' }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -110,7 +116,7 @@ function App() {
         />
         <MapEvents />
         {filteredFires.map((fire, index) => (
-          fire.geometry.map((geo, idx) => (
+          fire.geometries.map((geo, idx) => (
             <Marker key={`${index}-${idx}`} position={[geo.coordinates[1], geo.coordinates[0]]}>
               <Popup>
                 {fire.title}

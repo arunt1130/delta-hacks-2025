@@ -5,6 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import JSONParser
+from django.http import JsonResponse
+from wildfire_tools import wildfire_data, find_closest_wildfire
+
 
 class FireDataView(APIView):
     def get(self, request):
@@ -17,11 +20,26 @@ class FireDataView(APIView):
 
 class FireDataSubmissionView(APIView):
     def post(self, request):
-        data = request.data   # So this is teh data from the frontend
+        if request.method == 'POST':
+            try:
+                # Get user coordinates from the request
+                user_lat = float(request.POST.get('latitude'))
+                user_lon = float(request.POST.get('longitude'))        
+
+                closest_wildfire, distance = find_closest_wildfire(user_lat, user_lon, wildfire_data)
+
+                if closest_wildfire:
+                    return JsonResponse({
+                        'closest_wildfire': closest_wildfire,
+                        'distance': distance
+                    })
+            except (TypeError, ValueError):
+                return JsonResponse({'error': 'Invalid or missing coordinates'}, status=400)    
+
 
 
         #here we can use the data for its applications, so calling the other functions 
 
-        return Response({"received_data": data}, status=status.HTTP_200_OK)
+        return Response({"received_data": wildfire_data}, status=status.HTTP_200_OK)
     
     
