@@ -92,11 +92,6 @@ function App() {
         <img src={logo} alt="Logo" style={{ width: '100px', height: 'auto' }} />
       </div>
       <h1>Search</h1>
-      <div className="card">
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
       <form onSubmit={handleCitySubmit}>
         <input
           type="text"
