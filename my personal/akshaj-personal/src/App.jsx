@@ -4,12 +4,27 @@ import 'leaflet/dist/leaflet.css';
 import './App.css';
 import { sendDataToBackend } from './send_data';
 import logo from './assets/logo_FINAL.jpg'; 
+import axios from 'axios';
 
 function App() {
   const [fires, setFires] = useState([]);
   const [mapBounds, setMapBounds] = useState(null);
   const [userLocation, setUserLocation] = useState([0, 0]);
   const [city, setCity] = useState('');
+  const [fireRiskData, setFireRiskData] = useState(null);
+
+  useEffect(() => {
+      const fetchFireRiskData = async () => {
+          try {
+              const response = await axios.get('http://127.0.0.1:8000/API/retrive_fire_risk/');
+              setFireRiskData(response.data); // Set the fetched data
+          } catch (error) {
+              console.error('Error fetching fire risk data:', error);
+          }
+      };
+
+      fetchFireRiskData(); // Fetch data on component mount
+  }, []);
 
   useEffect(() => {
     const apiKey = 'bcba66dd6814936acfb57a37018a4848'; // Replace with your actual API key
@@ -78,6 +93,7 @@ function App() {
 
   return (
     <>
+      <div>{fireRiskData ? JSON.stringify(fireRiskData) : 'Loading...'}</div>
       <div>
         <img src={logo} alt="Logo" style={{ width: '100px', height: 'auto' }} />
       </div>
