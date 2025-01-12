@@ -1,4 +1,3 @@
-// filepath: /Users/akshaj/Coding (on mac)/FINAL/delta-hacks-2025/my personal/akshaj-personal/src/App.jsx
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import axios from 'axios';
@@ -6,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
+import LocationForm from './LocationForm';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -55,6 +55,8 @@ function App() {
       .then(response => {
         const { lat, lng } = response.data.results[0].geometry;
         setUserLocation([lat, lng]);
+        alert(`lat${lat}`);
+        alert(`long${lng}`);
         alert(`Location for ${city}: Latitude ${lat}, Longitude ${lng}`);
       })
       .catch(error => console.error('Error fetching geocoding data:', error));
@@ -85,6 +87,10 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
+      <div>
+        <h1>Address to Coordinates Converter</h1>
+        <LocationForm />
+      </div>
       <h1>Search</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -97,15 +103,6 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      <form onSubmit={handleCitySubmit}>
-        <input
-          type="text"
-          value={city}
-          onChange={handleCityChange}
-          placeholder="Enter city name"
-        />
-        <button type="submit">Search</button>
-      </form>
       <MapContainer center={userLocation} zoom={2} style={{ height: '500px', width: '100%' }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
