@@ -18,7 +18,6 @@ function App() {
     const apiKey = 'bcba66dd6814936acfb57a37018a4848'; // Replace with your actual API key
     const url = `https://eonet.gsfc.nasa.gov/api/v3/events?api_key=${apiKey}`;
 
-    // Fetch data from the NASA FIRMS API using fetch
     fetch(url)
       .then(response => response.json())
       .then(data => {
