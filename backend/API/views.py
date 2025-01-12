@@ -13,7 +13,7 @@ from .wildfire_tools import wildfire_data, find_closest_wildfire
 #import wildfire_tools
 
 
-
+print()
 
 class FireDataView(APIView):
     def get(self, request):
