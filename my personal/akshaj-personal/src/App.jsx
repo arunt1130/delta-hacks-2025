@@ -18,9 +18,9 @@ function App() {
       .then(response => response.json())
       .then(data => {
         console.log(data); // Log the data to verify the structure
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        const recentFires = data.events.filter(event => new Date(event.geometry[0].date) >= oneMonthAgo);
+        const tenDaysAgo = new Date();
+        tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+        const recentFires = data.events.filter(event => new Date(event.geometry[0].date) >= tenDaysAgo);
         setFires(recentFires);
       })
       .catch(error => console.error('Error fetching data:', error));
