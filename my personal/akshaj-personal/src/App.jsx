@@ -1,6 +1,7 @@
 // filepath: /Users/akshaj/Coding (on mac)/FINAL/delta-hacks-2025/my personal/akshaj-personal/src/App.jsx
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
@@ -11,6 +12,7 @@ function App() {
   const [fires, setFires] = useState([]);
   const [mapBounds, setMapBounds] = useState(null);
   const [userLocation, setUserLocation] = useState([0, 0]);
+  const [city, setCity] = useState('');
 
   useEffect(() => {
     const apiKey = 'bcba66dd6814936acfb57a37018a4848'; // Replace with your actual API key
@@ -40,6 +42,24 @@ function App() {
       );
     }
   }, []);
+
+  const handleCityChange = (e) => {
+    setCity(e.target.value);
+  };
+
+  const handleCitySubmit = (e) => {
+    e.preventDefault();
+    const geocodingApiKey = '45006f4114e645bc80b14ac0f6530c1d'; 
+    const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${geocodingApiKey}`;
+
+    axios.get(geocodingUrl)
+      .then(response => {
+        const { lat, lng } = response.data.results[0].geometry;
+        setUserLocation([lat, lng]);
+        alert(`Location for ${city}: Latitude ${lat}, Longitude ${lng}`);
+      })
+      .catch(error => console.error('Error fetching geocoding data:', error));
+  };
 
   const MapEvents = () => {
     useMapEvents({
@@ -78,6 +98,15 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <form onSubmit={handleCitySubmit}>
+        <input
+          type="text"
+          value={city}
+          onChange={handleCityChange}
+          placeholder="Enter city name"
+        />
+        <button type="submit">Search</button>
+      </form>
       <MapContainer center={userLocation} zoom={2} style={{ height: '500px', width: '100%' }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
