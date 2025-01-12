@@ -6,9 +6,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import JSONParser
 from django.http import JsonResponse
+
+import json
 from .wildfire_tools import wildfire_data, find_closest_wildfire
 
-
+#import wildfire_tools
 
 
 

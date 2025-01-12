@@ -55,4 +55,4 @@ def find_closest_wildfire(user_lat, user_lon):
             closest_distance = distance
             closest_wildfire = lines
 
-    return (closest_wildfire[0],closest_wildfire[1]) , closest_distance
+    return (float(closest_wildfire[0]),float(closest_wildfire[1])) , closest_distance
