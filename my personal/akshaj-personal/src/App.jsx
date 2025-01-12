@@ -13,28 +13,29 @@ function App() {
   const [userLocation, setUserLocation] = useState([0, 0]);
   const [city, setCity] = useState('');
   const [fireRiskData, setFireRiskData] = useState(null);
+  const [survivalChance, setSurvivalChance] = useState('Calculating...');
 
   useEffect(() => {
         const fetchFireRiskData = async () => {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/API/retrive_fire_risk/');
-                setFireRiskData(response.data); // Set the fetched data
+                setFireRiskData(response.data); 
             } catch (error) {
                 console.error('Error fetching fire risk data:', error);
             }
         };
 
-        fetchFireRiskData(); // Fetch data on component mount
+        fetchFireRiskData(); 
     }, []);
 
   useEffect(() => {
-    const apiKey = 'bcba66dd6814936acfb57a37018a4848'; // Replace with your actual API key
+    const apiKey = 'bcba66dd6814936acfb57a37018a4848'; 
     const url = `https://eonet.gsfc.nasa.gov/api/v3/events?api_key=${apiKey}`;
 
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log(data); // Log the data to verify the structure
+        console.log(data); 
         const tenDaysAgo = new Date();
         tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
         const recentFires = data.events.filter(event => new Date(event.geometry[0].date) >= tenDaysAgo);
@@ -61,10 +62,10 @@ function App() {
   const handleCityChange = (e) => {
     setCity(e.target.value);
   };
-
+  
   const handleCitySubmit = (e) => {
     e.preventDefault();
-    const geocodingApiKey = '45006f4114e645bc80b14ac0f6530c1d'; // Replace with your actual OpenCage API key
+    const geocodingApiKey = '45006f4114e645bc80b14ac0f6530c1d'; 
     const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${geocodingApiKey}`;
 
     fetch(geocodingUrl)
@@ -92,43 +93,60 @@ function App() {
     )
   );
 
+  const formatFireRiskData = (data) => {
+    if (!data) return 'Loading...';
+    if (typeof data !== 'string') {
+      data = JSON.stringify(data, null, 2); // Convert non-string data to a formatted string
+    }
+    const lines = data.split('\n\n');
+    return (
+      <ul className="fire-risk-list">
+        {lines.map((line, index) => (
+          <li key={index}>{line}</li>
+        ))}
+      </ul>
+    );
+  };
+
+
   return (
     <>
       <div>
         <img src={logo} alt="Logo" style={{ width: '100px', height: 'auto' }} />
       </div>
-      <h1>Search</h1>
+      <h1 className="alerts">Alerts in Your Area</h1>
       <form onSubmit={handleCitySubmit}>
         <input
           type="text"
           value={city}
           onChange={handleCityChange}
           placeholder="Enter city name"
+          className="city-input"
         />
-        <button type="submit">Search</button>
+        <button type="submit" className="city-submit">Search</button>
       </form>
-      <MapContainer center={userLocation} zoom={2} style={{ height: '500px', width: '100%' }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <MapEvents />
-        {filteredFires.map((fire, index) => (
-          fire.geometry.map((geo, idx) => (
-            <Marker key={`${index}-${idx}`} position={[geo.coordinates[1], geo.coordinates[0]]}>
-              <Popup>
-                {fire.title}
-              </Popup>
-            </Marker>
-          ))
-        ))}
-      </MapContainer>
-      
-      <div>{fireRiskData ? JSON.stringify(fireRiskData) : 'Loading...'}</div>
-      <div className="chatbot">
-        <h2>Chatbot Placeholder</h2>
-        <div className="chat-window">
-          <p>This is where the chatbot will go.</p>
+      <div className="map-and-data">
+        <MapContainer center={userLocation} zoom={2} className="map-container">
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <MapEvents />
+          {filteredFires.map((fire, index) => (
+            fire.geometry.map((geo, idx) => (
+              <Marker key={`${index}-${idx}`} position={[geo.coordinates[1], geo.coordinates[0]]}>
+                <Popup>
+                  {fire.title}
+                </Popup>
+              </Marker>
+            ))
+          ))}
+        </MapContainer>
+        <h2>Chance of Survival: {survivalChance}</h2>
+        <hr className="divider" />
+        <h2>How AI Can Help You!</h2>
+        <div className="fire-risk-data">
+          {formatFireRiskData(fireRiskData)}
         </div>
       </div>
     </>

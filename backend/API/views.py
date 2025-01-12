@@ -76,6 +76,6 @@ class ReturnFireRisk(APIView):
 
           fire_data = {
                "danger" : 20, 
-               "ai_response" : chat(20, 100,  300) 
+               "ai_response" : chat(30, 32,  20) 
           }
           return Response(fire_data,  status=status.HTTP_200_OK)

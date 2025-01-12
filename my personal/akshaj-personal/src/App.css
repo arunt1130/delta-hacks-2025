@@ -3,17 +3,61 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 body {
   background: linear-gradient(to right, #F5B680, #E1B7A1, #D4BDB7, #CDBCC2, #CBBBC6, #CDB5CD, #D4B0CC );
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.alerts {
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: 'Times New Roman', Times, serif;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 0.15em solid black;
+  animation: typing 4s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: black; }
 }
 
 .leaflet-container {
   height: 500px;
   width: 100%;
+}
+
+.map-and-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.map-container {
+  height: 500px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.fire-risk-data {
+  margin-top: 20px;
+  max-width: 800px;
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  color: black;
 }
 
 form {
@@ -25,14 +69,14 @@ input {
   padding: 10px;
   width: 200px;
   margin-right: 10px;
-  border-radius: 20px; /* Add this line to make the input a round rectangle */
-  border: 1px solid #ccc; /* Optional: Add a border to the input */
+  border-radius: 20px;
+  border: 1px solid #ccc;
 }
 
 button {
   padding: 10px;
-  border-radius: 20px; /* Add this line to make the button a round rectangle */
-  border: 1px solid #ccc; /* Optional: Add a border to the button */
+  border-radius: 20px;
+  border: 1px solid #ccc;
 }
 
 .chatbot {
@@ -108,10 +152,6 @@ button {
   background-color: #0056b3;
 }
 
-.chat-input button:hover {
-  background-color: #0056b3;
-}
-
 .fire-risk-list {
   list-style-type: disc;
   padding-left: 20px;
@@ -129,37 +169,3 @@ button {
   border: none;
   border-top: 1px solid #ccc;
 }
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
