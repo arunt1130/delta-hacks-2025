@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import 'leaflet/dist/leaflet.css';
 import './App.css';
 import { sendDataToBackend } from './send_data';
-import logo from './assets/logo.png'; // Adjust the path as needed
+import logo from './assets/logo.png'; 
 
 function App() {
   const [fires, setFires] = useState([]);

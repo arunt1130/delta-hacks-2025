@@ -6,7 +6,7 @@
 }
 
 body {
-  background: linear-gradient(to right, red, yellow);
+  background: linear-gradient(to right, #EFEAE7, #B40709);
   margin: 0;
   font-family: Arial, sans-serif;
 }
@@ -25,42 +25,14 @@ input {
   padding: 10px;
   width: 200px;
   margin-right: 10px;
+  border-radius: 20px; /* Add this line to make the input a round rectangle */
+  border: 1px solid #ccc; /* Optional: Add a border to the input */
 }
 
 button {
   padding: 10px;
-}
-
-.chatbot {
-  margin-top: 20px;
-  padding: 20px;
+  border-radius: 20px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%;
-  max-width: 600px;
-  margin: 20px auto;
-}
-
-.chat-window {
-  height: 300px;
-  overflow-y: scroll;
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.chat-message {
-  margin: 5px 0;
-}
-
-.chat-message.user {
-  text-align: right;
-  color: blue;
-}
-
-.chat-message.ai {
-  text-align: left;
-  color: green;
 }
 
 
