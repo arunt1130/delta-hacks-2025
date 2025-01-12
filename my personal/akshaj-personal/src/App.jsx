@@ -10,6 +10,7 @@ function App() {
   const [count, setCount] = useState(0);
   const [fires, setFires] = useState([]);
   const [mapBounds, setMapBounds] = useState(null);
+  const [userLocation, setUserLocation] = useState([0, 0]);
 
   useEffect(() => {
     const apiKey = 'bcba66dd6814936acfb57a37018a4848'; // Replace with your actual API key
@@ -23,6 +24,19 @@ function App() {
         setFires(data.events);
       })
       .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation([position.coords.latitude, position.coords.longitude]);
+        },
+        (error) => {
+          console.error('Error getting user location:', error);
+        }
+      );
+    }
   }, []);
 
   const MapEvents = () => {
@@ -62,7 +76,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      <MapContainer center={[0, 0]} zoom={2} style={{ height: '500px', width: '100%' }}>
+      <MapContainer center={userLocation} zoom={2} style={{ height: '500px', width: '100%' }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
