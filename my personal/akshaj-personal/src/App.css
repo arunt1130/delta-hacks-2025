@@ -108,6 +108,28 @@ button {
   background-color: #0056b3;
 }
 
+.chat-input button:hover {
+  background-color: #0056b3;
+}
+
+.fire-risk-list {
+  list-style-type: disc;
+  padding-left: 20px;
+  text-align: left;
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+.fire-risk-list li {
+  margin-bottom: 10px;
+}
+
+.divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
