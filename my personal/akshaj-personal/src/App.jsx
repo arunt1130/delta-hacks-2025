@@ -1,7 +1,5 @@
-// filepath: /Users/akshaj/Coding (on mac)/my personal/akshaj-personal/src/App.jsx
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
-import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 import './App.css';
 import { sendDataToBackend } from './send_data';
@@ -11,8 +9,6 @@ function App() {
   const [mapBounds, setMapBounds] = useState(null);
   const [userLocation, setUserLocation] = useState([0, 0]);
   const [city, setCity] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
 
   useEffect(() => {
     const apiKey = 'bcba66dd6814936acfb57a37018a4848'; // Replace with your actual API key
@@ -72,39 +68,6 @@ function App() {
       .catch(error => console.error('Error fetching geocoding data:', error));
   };
 
-  const handleInputChange = (e) => {
-    setInput(e.target.value);
-  };
-
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    const newMessage = { text: input, sender: 'user' };
-    setMessages([...messages, newMessage]);
-    setInput('');
-
-    // Call Cohere API
-    const cohereApiKey = '88nb99FJsBIdnUFpPwU7LWlDuPxF1gvbDX9hCVQ1'; 
-    axios.post('https://api.cohere.ai/generate', {
-      model: 'xlarge',
-      prompt: `User: ${input}\nAI:`,
-      max_tokens: 50,
-      temperature: 0.7,
-      k: 0,
-      stop_sequences: ['\n'],
-      return_likelihoods: 'NONE'
-    }, {
-      headers: {
-        'Authorization': `Bearer ${cohereApiKey}`,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      const aiMessage = { text: response.data.generations[0].text.trim(), sender: 'ai' };
-      setMessages([...messages, newMessage, aiMessage]);
-    })
-    .catch(error => console.error('Error fetching data from Cohere API:', error));
-  };
-
   const MapEvents = () => {
     useMapEvents({
       moveend: (event) => {
@@ -161,25 +124,6 @@ function App() {
           ))
         ))}
       </MapContainer>
-      <div className="chatbot">
-        <h2>Chatbot</h2>
-        <div className="chat-window">
-          {messages.map((msg, index) => (
-            <div key={index} className={`chat-message ${msg.sender}`}>
-              {msg.text}
-            </div>
-          ))}
-        </div>
-        <form onSubmit={handleSendMessage}>
-          <input
-            type="text"
-            value={input}
-            onChange={handleInputChange}
-            placeholder="Type a message"
-          />
-          <button type="submit">Send</button>
-        </form>
-      </div>
     </>
   );
 }
