@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import index
-
+from django.urls import path, include
 
 urlpatterns = [
     path('', index, name='home'),
     path('admin/', admin.site.urls), #renders react app
     # Include any other API routes or views here
+    path('API/', include('API.urls')),
 ]
