@@ -3,7 +3,7 @@ import datetime
 from math import radians, sin, cos, sqrt, atan2
 
 #NASA API key
-API_KEY = 'bcba66dd6814936acfb57a37018a4848'
+API_KEY = '7f7632b8281d59c35ef769fa5c6c9987'
 
 # Get today's date
 today = datetime.date.today()
@@ -19,7 +19,7 @@ if response.status_code == 200:
 
 def haversine(lon1, lat1, lon2, lat2):
     # Convert latitude and longitude from degrees to radians
-    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    lon1, lat1, lon2, lat2 = map(radians, [float(lon1), float(lat1), float(lon2), float(lat2)])
 
     # Haversine formula
     dlon = lon2 - lon1
@@ -34,14 +34,18 @@ def haversine(lon1, lat1, lon2, lat2):
     distance = R * c
     return distance
 
-def find_closest_wildfire(user_lat, user_lon, wildfire_data):
+def find_closest_wildfire(user_lat, user_lon):
     closest_distance = float('inf')
     closest_wildfire = None
 
-    for fire in wildfire_data['features']:
+    wildfire_data = open("API/fireinformation.txt", 'r')
+
+    for fire in wildfire_data.readlines():
         # Extract wildfire coordinates (latitude and longitude)
-        fire_lat = fire['geometry']['coordinates'][1]
-        fire_lon = fire['geometry']['coordinates'][0]
+        lines = fire.split(',')
+
+        fire_lat = lines[0]
+        fire_lon = lines[1]
 
         # Calculate the distance to the user's location
         distance = haversine(user_lon, user_lat, fire_lon, fire_lat)
@@ -49,6 +53,6 @@ def find_closest_wildfire(user_lat, user_lon, wildfire_data):
         # Update closest wildfire if we find a closer one
         if distance < closest_distance:
             closest_distance = distance
-            closest_wildfire = fire
+            closest_wildfire = lines
 
-    return closest_wildfire, closest_distance
+    return (float(closest_wildfire[0]),float(closest_wildfire[1])) , closest_distance

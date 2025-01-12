@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './App.css';
+import { sendDataToBackend } from './send_data';
 
 function App() {
   const [fires, setFires] = useState([]);
@@ -32,6 +33,14 @@ function App() {
           const location = [position.coords.latitude, position.coords.longitude];
           setUserLocation(location);
           alert(`Your location: Latitude ${location[0]}, Longitude ${location[1]}`);
+
+          const locationData = {
+            longitude: location[0],
+            latitude: location[1]
+          }
+          
+          sendDataToBackend(locationData);
+
         },
         (error) => {
           console.error('Error getting user location:', error);
