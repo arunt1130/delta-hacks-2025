@@ -22,6 +22,8 @@ class FireDataSubmissionView(APIView):
 
         #here we can use the data for its applications, so calling the other functions 
 
+        print(data)
+
         return Response({"received_data": data}, status=status.HTTP_200_OK)
     
-    
+

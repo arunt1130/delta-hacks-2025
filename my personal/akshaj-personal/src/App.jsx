@@ -5,6 +5,10 @@ import 'leaflet/dist/leaflet.css';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
+import { sendDataToBackend } from './send_data';
+
+
+
 
 function App() {
   const [count, setCount] = useState(0);
@@ -33,6 +37,15 @@ function App() {
           const location = [position.coords.latitude, position.coords.longitude];
           setUserLocation(location);
           alert(`Your location: Latitude ${location[0]}, Longitude ${location[1]}`);
+
+
+          const locationData = {
+            longatude: location[0],
+            latatude: location[1]
+        };
+
+        sendDataToBackend(locationData);
+
         },
         (error) => {
           console.error('Error getting user location:', error);
@@ -53,6 +66,7 @@ function App() {
   const filteredFires = fires.filter(fire =>
     fire.geometry.some(geo =>
       mapBounds && mapBounds.contains([geo.coordinates[1], geo.coordinates[0]])
+
     )
   );
 
