@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import 'leaflet/dist/leaflet.css';
 import './App.css';
 import { sendDataToBackend } from './send_data';
-import logo from './assets/logo.png'; 
+import logo from './assets/logo_FINAL.jpg'; 
 
 function App() {
   const [fires, setFires] = useState([]);
@@ -57,16 +57,6 @@ function App() {
         const { lat, lng } = data.results[0].geometry;
         setUserLocation([lat, lng]);
         alert(`Location for ${city}: Latitude ${lat}, Longitude ${lng}`);
-
-        const locationData = {
-          longitude: lat,
-          latitude: lng
-        }
-        
-        sendDataToBackend(locationData);
-
-
-
       })
       .catch(error => console.error('Error fetching geocoding data:', error));
   };
@@ -88,7 +78,7 @@ function App() {
 
   return (
     <>
-      <div className='logo'>
+      <div>
         <img src={logo} alt="Logo" style={{ width: '100px', height: 'auto' }} />
       </div>
       <h1>Search</h1>
@@ -117,6 +107,12 @@ function App() {
           ))
         ))}
       </MapContainer>
+      <div className="chatbot">
+        <h2>Chatbot Placeholder</h2>
+        <div className="chat-window">
+          <p>This is where the chatbot will go.</p>
+        </div>
+      </div>
     </>
   );
 }

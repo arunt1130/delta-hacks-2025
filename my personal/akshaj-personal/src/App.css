@@ -6,7 +6,7 @@
 }
 
 body {
-  background: linear-gradient(to right, #EFEAE7, #B40709);
+  background: linear-gradient(to right, #F5B680, #E1B7A1, #D4BDB7, #CDBCC2, #CBBBC6, #CDB5CD, #D4B0CC );
   margin: 0;
   font-family: Arial, sans-serif;
 }
@@ -31,10 +31,100 @@ input {
 
 button {
   padding: 10px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
+  border-radius: 20px; /* Add this line to make the button a round rectangle */
+  border: 1px solid #ccc; /* Optional: Add a border to the button */
 }
 
+.chatbot {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-window {
+  height: 300px;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.chat-message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.chat-message.user {
+  text-align: right;
+  background-color: #d1e7dd;
+  color: #0f5132;
+  align-self: flex-end;
+}
+
+.chat-message.ai {
+  text-align: left;
+  background-color: #f8d7da;
+  color: #842029;
+  align-self: flex-start;
+}
+
+.chat-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ccc;
+  padding: 10px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.chat-input button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.chat-input button:hover {
+  background-color: #0056b3;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 @keyframes logo-spin {
   from {
