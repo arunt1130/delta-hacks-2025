@@ -30,7 +30,9 @@ function App() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserLocation([position.coords.latitude, position.coords.longitude]);
+          const location = [position.coords.latitude, position.coords.longitude];
+          setUserLocation(location);
+          alert(`Your location: Latitude ${location[0]}, Longitude ${location[1]}`);
         },
         (error) => {
           console.error('Error getting user location:', error);
