@@ -5,7 +5,12 @@
   text-align: center;
 }
 
-/* filepath: /Users/akshaj/Coding (on mac)/my personal/akshaj-personal/src/App.css */
+body {
+  background: linear-gradient(to right, red, yellow);
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
 .leaflet-container {
   height: 500px;
   width: 100%;
@@ -57,6 +62,7 @@ button {
   text-align: left;
   color: green;
 }
+
 
 @keyframes logo-spin {
   from {

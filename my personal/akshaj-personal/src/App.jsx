@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import 'leaflet/dist/leaflet.css';
 import './App.css';
 import { sendDataToBackend } from './send_data';
+import logo from './assets/logo.png'; // Adjust the path as needed
 
 function App() {
   const [fires, setFires] = useState([]);
@@ -18,9 +19,9 @@ function App() {
       .then(response => response.json())
       .then(data => {
         console.log(data); // Log the data to verify the structure
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        const recentFires = data.events.filter(event => new Date(event.geometry[0].date) >= oneMonthAgo);
+        const tenDaysAgo = new Date();
+        tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+        const recentFires = data.events.filter(event => new Date(event.geometry[0].date) >= tenDaysAgo);
         setFires(recentFires);
       })
       .catch(error => console.error('Error fetching data:', error));
@@ -33,14 +34,6 @@ function App() {
           const location = [position.coords.latitude, position.coords.longitude];
           setUserLocation(location);
           alert(`Your location: Latitude ${location[0]}, Longitude ${location[1]}`);
-
-          const locationData = {
-            longitude: location[0],
-            latitude: location[1]
-          }
-          
-          sendDataToBackend(locationData);
-
         },
         (error) => {
           console.error('Error getting user location:', error);
@@ -95,13 +88,8 @@ function App() {
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src="./assets/react.svg" className="logo react" alt="React logo" />
-        </a>
+      <div className='logo'>
+        <img src={logo} alt="Logo" style={{ width: '100px', height: 'auto' }} />
       </div>
       <h1>Search</h1>
       <div className="card">
