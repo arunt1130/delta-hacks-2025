@@ -1,5 +1,6 @@
+// filepath: /Users/akshaj/Coding (on mac)/FINAL/delta-hacks-2025/my personal/akshaj-personal/src/App.jsx
 import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
@@ -8,9 +9,10 @@ import './App.css';
 function App() {
   const [count, setCount] = useState(0);
   const [fires, setFires] = useState([]);
+  const [mapBounds, setMapBounds] = useState(null);
 
   useEffect(() => {
-    const apiKey = 'e3414287cc2d1c5b89e09c0f4009f63d'; // Replace with your actual API key
+    const apiKey = 'bcba66dd6814936acfb57a37018a4848'; // Replace with your actual API key
     const url = `https://eonet.gsfc.nasa.gov/api/v3/events?api_key=${apiKey}`;
 
     // Fetch data from the NASA FIRMS API using fetch
@@ -22,6 +24,21 @@ function App() {
       })
       .catch(error => console.error('Error fetching data:', error));
   }, []);
+
+  const MapEvents = () => {
+    useMapEvents({
+      moveend: (event) => {
+        setMapBounds(event.target.getBounds());
+      },
+    });
+    return null;
+  };
+
+  const filteredFires = fires.filter(fire =>
+    fire.geometry.some(geo =>
+      mapBounds && mapBounds.contains([geo.coordinates[1], geo.coordinates[0]])
+    )
+  );
 
   return (
     <>
@@ -50,7 +67,8 @@ function App() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {fires.map((fire, index) => (
+        <MapEvents />
+        {filteredFires.map((fire, index) => (
           fire.geometry.map((geo, idx) => (
             <Marker key={`${index}-${idx}`} position={[geo.coordinates[1], geo.coordinates[0]]}>
               <Popup>
