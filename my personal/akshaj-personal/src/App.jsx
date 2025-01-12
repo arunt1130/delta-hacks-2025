@@ -1,33 +1,31 @@
-// filepath: /Users/akshaj/Coding (on mac)/FINAL/delta-hacks-2025/my personal/akshaj-personal/src/App.jsx
+// filepath: /Users/akshaj/Coding (on mac)/my personal/akshaj-personal/src/App.jsx
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 import { sendDataToBackend } from './send_data';
 
-
-
-
 function App() {
-  const [count, setCount] = useState(0);
   const [fires, setFires] = useState([]);
   const [mapBounds, setMapBounds] = useState(null);
   const [userLocation, setUserLocation] = useState([0, 0]);
   const [city, setCity] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
 
   useEffect(() => {
     const apiKey = 'bcba66dd6814936acfb57a37018a4848'; // Replace with your actual API key
     const url = `https://eonet.gsfc.nasa.gov/api/v3/events?api_key=${apiKey}`;
 
-    // Fetch data from the NASA FIRMS API using fetch
     fetch(url)
       .then(response => response.json())
       .then(data => {
         console.log(data); // Log the data to verify the structure
-        setFires(data.events);
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+        const recentFires = data.events.filter(event => new Date(event.geometry[0].date) >= oneMonthAgo);
+        setFires(recentFires);
       })
       .catch(error => console.error('Error fetching data:', error));
   }, []);
@@ -40,13 +38,12 @@ function App() {
           setUserLocation(location);
           alert(`Your location: Latitude ${location[0]}, Longitude ${location[1]}`);
 
-
           const locationData = {
-            longatude: location[0],
-            latatude: location[1]
-        };
-
-        sendDataToBackend(locationData);
+            longitude: location[0],
+            latitude: location[1]
+          }
+          
+          sendDataToBackend(locationData);
 
         },
         (error) => {
@@ -62,16 +59,50 @@ function App() {
 
   const handleCitySubmit = (e) => {
     e.preventDefault();
-    const geocodingApiKey = '45006f4114e645bc80b14ac0f6530c1d'; 
+    const geocodingApiKey = '45006f4114e645bc80b14ac0f6530c1d'; // Replace with your actual OpenCage API key
     const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${geocodingApiKey}`;
 
-    axios.get(geocodingUrl)
-      .then(response => {
-        const { lat, lng } = response.data.results[0].geometry;
+    fetch(geocodingUrl)
+      .then(response => response.json())
+      .then(data => {
+        const { lat, lng } = data.results[0].geometry;
         setUserLocation([lat, lng]);
         alert(`Location for ${city}: Latitude ${lat}, Longitude ${lng}`);
       })
       .catch(error => console.error('Error fetching geocoding data:', error));
+  };
+
+  const handleInputChange = (e) => {
+    setInput(e.target.value);
+  };
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    const newMessage = { text: input, sender: 'user' };
+    setMessages([...messages, newMessage]);
+    setInput('');
+
+    // Call Cohere API
+    const cohereApiKey = '88nb99FJsBIdnUFpPwU7LWlDuPxF1gvbDX9hCVQ1'; 
+    axios.post('https://api.cohere.ai/generate', {
+      model: 'xlarge',
+      prompt: `User: ${input}\nAI:`,
+      max_tokens: 50,
+      temperature: 0.7,
+      k: 0,
+      stop_sequences: ['\n'],
+      return_likelihoods: 'NONE'
+    }, {
+      headers: {
+        'Authorization': `Bearer ${cohereApiKey}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      const aiMessage = { text: response.data.generations[0].text.trim(), sender: 'ai' };
+      setMessages([...messages, newMessage, aiMessage]);
+    })
+    .catch(error => console.error('Error fetching data from Cohere API:', error));
   };
 
   const MapEvents = () => {
@@ -86,7 +117,6 @@ function App() {
   const filteredFires = fires.filter(fire =>
     fire.geometry.some(geo =>
       mapBounds && mapBounds.contains([geo.coordinates[1], geo.coordinates[0]])
-
     )
   );
 
@@ -94,24 +124,18 @@ function App() {
     <>
       <div>
         <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
+          <img src="/vite.svg" className="logo" alt="Vite logo" />
         </a>
         <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
+          <img src="./assets/react.svg" className="logo react" alt="React logo" />
         </a>
       </div>
       <h1>Search</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
       <form onSubmit={handleCitySubmit}>
         <input
           type="text"
@@ -137,6 +161,25 @@ function App() {
           ))
         ))}
       </MapContainer>
+      <div className="chatbot">
+        <h2>Chatbot</h2>
+        <div className="chat-window">
+          {messages.map((msg, index) => (
+            <div key={index} className={`chat-message ${msg.sender}`}>
+              {msg.text}
+            </div>
+          ))}
+        </div>
+        <form onSubmit={handleSendMessage}>
+          <input
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Type a message"
+          />
+          <button type="submit">Send</button>
+        </form>
+      </div>
     </>
   );
 }

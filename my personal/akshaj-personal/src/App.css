@@ -25,6 +25,37 @@ button {
   padding: 10px;
 }
 
+.chatbot {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.chat-window {
+  height: 300px;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.chat-message {
+  margin: 5px 0;
+}
+
+.chat-message.user {
+  text-align: right;
+  color: blue;
+}
+
+.chat-message.ai {
+  text-align: left;
+  color: green;
+}
 
 @keyframes logo-spin {
   from {
