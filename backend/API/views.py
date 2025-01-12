@@ -44,13 +44,17 @@ class FireDataSubmissionView(APIView):
 
                 closest_wildfire, distance = find_closest_wildfire(user_lat, user_lon)
 
+                percent_danger = distance // 30
+
                 if closest_wildfire:
 
                     print((closest_wildfire))
                     print(distance)
+                    print(percent_danger)
                     return JsonResponse({
-                        'closest_wildfire': (closest_wildfire),
-                        'distance': distance
+                        'closest_wildfire': closest_wildfire,
+                        'distance': distance,
+                        'percent_danger': percent_danger
                     })
         
                 '''

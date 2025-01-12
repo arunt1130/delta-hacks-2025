@@ -1,6 +1,6 @@
 import requests
 import datetime
-from math import radians, sin, cos, sqrt, atan2
+from math import radians, sin, cos, sqrt, asin
 
 #NASA API key
 API_KEY = '7f7632b8281d59c35ef769fa5c6c9987'
@@ -25,9 +25,7 @@ def haversine(lon1, lat1, lon2, lat2):
     dlon = lon2 - lon1
     dlat = lat2 - lat1
     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * atan2(sqrt(a), sqrt(1-a))
-
-    # Radius of Earth in kilometers
+    c = 2 * asin(sqrt(a))
     R = 6371.0
 
     # Calculate the distance
