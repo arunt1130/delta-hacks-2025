@@ -1,4 +1,4 @@
-Wildfire Detection and Alert System 
+Rapid-Fire Alerts
 This project leverages NASA's API to detect wildfires near a user's location and assess the danger level based on proximity and severity. The goal is to provide a reliable tool to alert individuals of potential wildfire threats, helping them take timely precautions to ensure safety.
 
 Key Features 
